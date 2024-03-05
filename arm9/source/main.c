@@ -38,6 +38,7 @@
 #include "deliver_arg.h"
 #include "screen.h"
 #include "i2c.h"
+#include "itcm.h"
 #include "fmt.h"
 #include "fatfs/sdmmc/sdmmc.h"
 
@@ -180,6 +181,9 @@ void main(int argc, char **argv, u32 magicWord)
     }
 
     detectAndProcessExceptionDumps();
+
+    // Writes plaintext OTP to ITCM, if OTP exists
+    if (getFileSize(OTP_PATH)) patchITCM();
 
     //Attempt to read the configuration file
     needConfig = readConfig() ? MODIFY_CONFIGURATION : CREATE_CONFIGURATION;
